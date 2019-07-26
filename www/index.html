@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <link rel="stylesheet" href="credprepay.css">
+  <title>CredPrePay - WEX Challenge</title>
+
+</head>
+<body>
+
+
+  <div class="formNovoCartao">
+      <input type="text" placeholder="Nome Completo" id="nome">
+      <input type="number" placeholder="Informe o saldo" id="saldoInicial">
+      <button class="btn" type="submit" id="btnSolicita">Solicitar</button>
+  </div>
+
+  <div id="mensagem" class="informacao">
+    Status...
+  </div>
+
+<div class="cartaoForm"> 
+        <div class="logo">
+          <img src="credprepaylogo.png" height="50px" width="100%" alt="CredPrePay">
+        </div>
+        <div class="numCartao" id="container-cartao">
+            <input type="text" class="input" id="numeroCartao" placeholder="0000 0000 0000 0000" readonly="readonly">
+          </div>
+    <div class="cartaoInfo">
+      <div class="validade">
+          <input id="mesValidadeCartao" type="text" class="validadeInput" placeholder="MM" readonly="readonly">
+          <input id="anoValidadeCartao" type="text" class="validadeInput" placeholder="YY" readonly="readonly">
+        </div>
+      <div class="cvv">
+        <input id="cvvCartao" type="text" class="cvvInput" placeholder="000" readonly="readonly">  
+        <div class="cvvLogo">?
+          <div class="logo">
+            <img src="cvv.png" height="80px" width="80px" alt="CVV">
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <div class="titular">
+        <input type="text" class="input" id="titularCartao" placeholder="NOME DO TITULAR" readonly="readonly">
+    </div>  
+</div>
+
+  
+</body>
+</html>
