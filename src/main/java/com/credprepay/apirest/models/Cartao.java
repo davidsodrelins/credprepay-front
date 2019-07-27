@@ -5,6 +5,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import javax.validation.constraints.NotBlank;
 
 
 @Entity
@@ -17,10 +18,12 @@ public class Cartao implements Serializable{
 	@GeneratedValue(strategy = GenerationType.AUTO)
 
 	private long id;
+	@NotBlank(message="{name.not.blank}")
 	private String titular;
 	private String numero;
 	private String validade;
 	private String senha;
+	@NotBlank
 	private double saldo;
 
 	public Cartao() {

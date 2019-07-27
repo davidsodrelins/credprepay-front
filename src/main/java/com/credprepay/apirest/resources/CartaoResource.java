@@ -61,7 +61,7 @@ public class CartaoResource {
 	@PostMapping("/cartao")
 	@ApiOperation(value="Gera e salva um Cartãos")
 
-	public CartaoReport salvaCartao(@RequestBody  Cartao cartao) throws CredentialNotFoundException {
+	public CartaoReport salvaCartao(@RequestBody  Cartao cartao ) throws CredentialNotFoundException {
 
 		CartaoReport credPrePay  = CartaoUtil.EmitirCartao(cartao);
 		
