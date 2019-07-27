@@ -7,25 +7,28 @@ import java.time.format.DateTimeFormatter;
 
 import org.apache.commons.lang3.RandomStringUtils;
 import com.credprepay.apirest.models.Cartao;
+import com.credprepay.apirest.models.Transacao;
 
 
 public class CartaoUtil {
 
-	public static boolean ValidaCCV (Cartao cartao, Long codigoCvv) {
+	public static boolean ValidaCCV (Transacao transacao) {
+		Long codigoCvv = Long.parseLong(transacao.getCvv());
 
-		final Integer bin = Integer.parseInt(cartao.getNumero().substring(0, 6 ));	
-		String numCartao = cartao.getNumero();
-		Integer dv = Integer.parseInt(cartao.getNumero().substring(12, 13));
+		Integer bin = Integer.parseInt(transacao.getNumeroCartao().substring(0, 6 ));	
+
+		String numCartao = transacao.getNumeroCartao();
+		Integer dv = Integer.parseInt(transacao.getNumeroCartao().substring(12, 13));
 		Integer sb = somatorio(bin);
 		Integer modSb = sb%10;
 		Integer divSb = sb/10;
 		Integer checkSum = ((((divSb*modSb)+dv))*sb);
-		Integer mesValidade = Integer.parseInt(cartao.getValidade().substring(0, 2));
-		Integer anoValidade = Integer.parseInt(cartao.getValidade().substring(3, 5));
+		Integer mesValidade = Integer.parseInt(transacao.getValidade().substring(0, 2));
+		Integer anoValidade = Integer.parseInt(transacao.getValidade().substring(3, 5));
 		Long cvv = ((somatorio(Long.parseLong(numCartao)) * anoValidade * mesValidade * checkSum) / ((anoValidade *	mesValidade * mesValidade)))/10 ;
+
 		return (Long.compare(cvv,codigoCvv)==0)?true:false;
 	}
-
 
 	public static Integer somatorio (Integer numero) {
 		Integer valor = 0;
@@ -58,7 +61,7 @@ public class CartaoUtil {
 
 		CartaoReport cartaoReport = new CartaoReport();
 
-		final Integer bin = 199108;
+		Integer bin = 199108;
 		Integer dv = Integer.parseInt(GeradorRandomico(1, false, true));
 		Integer sb = somatorio(bin);
 		Integer modSb = sb%10;
@@ -77,7 +80,7 @@ public class CartaoUtil {
 		cartaoReport.setTitular(cartao.getTitular());
 		cartaoReport.setNumero(numCartao);
 		cartaoReport.setCvv(cvv.toString());
-		
+
 		if (mesValidade < 10) {
 			cartaoReport.setValidade("0" + mesValidade+ "/" + anoValidade);
 		}else {
@@ -96,44 +99,55 @@ public class CartaoUtil {
 			cartao.setValidade(mesValidade+"/"+anoValidade);
 		}
 
-
 		try {
 			cartao.setSenha(Security.crypto(senha));
 		} catch (UnsupportedEncodingException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (GeneralSecurityException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 
-		//		System.out.println("Teste no Cadastro - CVV DO CARTAO GERADO " + cartaoReport.getCvv());
-		//		System.out.println("CVV Calculado " + cvv);
-		//		
-		//		System.out.println(CartaoUtil.ValidaCCV(cartao, Long.parseLong(cartaoReport.getCvv()))?"CVV Válido":"CVV Inválido");
 		return cartaoReport;	
 	}
-
-
-
 
 	public static String GerarSenha () {
 		return  GeradorRandomico(4, false, true);
 	}
 
-
-	public static boolean ValidaCartao (Cartao cartao) {
-		return true;
-	}
-
-	public static boolean ValidaData (Cartao cartao) {
-		return true;
-	}
-
-
-
 	public static String GeradorRandomico(int tamanho, boolean letras, boolean numeros) {
 		String generatedString = RandomStringUtils.random(tamanho, letras, numeros);
 		return generatedString;
 	}
+
+	public static boolean validaData(Transacao transacao, Cartao cartao) {
+
+		LocalDate data = LocalDate.now();
+		Integer mesAtual = Integer.parseInt(data.format(DateTimeFormatter.ofPattern("MM")));
+		Integer anoAtual = Integer.parseInt(data.format(DateTimeFormatter.ofPattern("yy")));
+
+		Integer mesValidade = Integer.parseInt(transacao.getValidade().substring(0, 2));
+		Integer anoValidade = Integer.parseInt(transacao.getValidade().substring(3, 5));
+
+		String ValidadeCartao = cartao.getValidade();
+		String ValidadeTransacao = transacao.getValidade();
+
+		return (ValidadeCartao.equals(ValidadeTransacao) && (anoAtual<=anoValidade) && (mesAtual<=mesValidade))?true:false;
+	}
+	
+	public static boolean validaSenha(Transacao transacao, Cartao busca){
+		String hash = busca.getSenha();
+		String senha = transacao.getSenha();
+		
+		try {
+			senha = Security.crypto(senha);
+		} catch (UnsupportedEncodingException e) {
+			e.printStackTrace();
+		} catch (GeneralSecurityException e) {
+			e.printStackTrace();
+		}
+
+		return hash.equals(senha)?true:false;
+	}
+
+
 }

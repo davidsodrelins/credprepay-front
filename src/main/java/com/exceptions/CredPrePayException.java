@@ -13,8 +13,4 @@ public class CredPrePayException extends RuntimeException {
 	public CredPrePayException(String mensagem, Throwable erro) {
 		super(mensagem, erro);
 	}
-	
-	
-	
-	
 }

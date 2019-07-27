@@ -77,5 +77,10 @@ public class Cartao implements Serializable{
 	public void setTitular(String titular) {
 		this.titular = titular;
 	}
+	
+	public void atualizarSaldo (double valorDebito) {
+		this.saldo = this.saldo-valorDebito;
+	}
 
+	
 }

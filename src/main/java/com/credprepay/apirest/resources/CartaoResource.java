@@ -14,12 +14,14 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import com.credprepay.apirest.models.Cartao;
+import com.credprepay.apirest.models.Transacao;
 import com.credprepay.apirest.repository.CartaoServices;
+import com.credprepay.apirest.repository.TransacaoServices;
 import com.credprepay.apirest.utils.CartaoReport;
 import com.credprepay.apirest.utils.CartaoUtil;
+import com.credprepay.apirest.utils.TransacaoUtil;
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 
@@ -37,42 +39,50 @@ public class CartaoResource {
 
 	@Autowired
 	CartaoServices cartaoRepository;
+	@Autowired
+	TransacaoServices transacaoRepository;
+
 
 	@GetMapping("/cartoes")
-	@ApiOperation(value="Retorna a lista de cartões")
+	@ApiOperation(value="Retornar a lista de cartões")
 	public List<Cartao> listaCartoes(){
 		return cartaoRepository.findAll();
 	}
 
-
-
 	@GetMapping("/cartao/{id}")
-	@ApiOperation(value="Retorna um cartão")
+	@ApiOperation(value="Retornar um cartão")
 	public Cartao buscar(@PathVariable(value="id") long id) throws JsonParseException, JsonMappingException, IOException, CredentialNotFoundException {
 		Cartao cartao = cartaoRepository.findById(id);
-
 		if (cartao == null) {
 			throw new CredentialNotFoundException("Cartão não cadastrado");
 		}
 		return cartao;
 	}
-	
+
+	@GetMapping("/cartao/{numero}")
+	@ApiOperation(value="Retornar um cartão a partir do numero indicado")
+	public Cartao buscar(@PathVariable(value="numero") String numero) throws JsonParseException, JsonMappingException, IOException, CredentialNotFoundException {
+
+		Cartao cartao = cartaoRepository.findByNumero(numero);
+		if (cartao == null) {
+			throw new CredentialNotFoundException("Cartão não cadastrado");
+		}
+		return cartao;
+	}
 
 	@PostMapping("/cartao")
-	@ApiOperation(value="Gera e salva um Cartãos")
+	@ApiOperation(value="Gerar e salvar um Cartãos")
 
 	public CartaoReport salvaCartao(@RequestBody  Cartao cartao ) throws CredentialNotFoundException {
 
 		CartaoReport credPrePay  = CartaoUtil.EmitirCartao(cartao);
-		
+
 		if(cartaoRepository.save(cartao)==null) {
 			throw new  CredentialNotFoundException("Erro durante o cadastro");
 		}else {
 			return credPrePay;
 		}
 	}
-
-
 
 
 	@DeleteMapping("/cartao")
@@ -85,6 +95,44 @@ public class CartaoResource {
 	@ApiOperation(value="Atualiza um cartão")
 	public Cartao editaCartao(@RequestBody Cartao cartao) {
 		return cartaoRepository.save(cartao);
+	}
+
+	@GetMapping("/transacoes")
+	@ApiOperation(value="Retornar a lista de autorizações")
+
+	public List<Transacao> listaTransacoes(){
+		return transacaoRepository.findAll();
+	}
+
+	@GetMapping("/transacao/{id}")
+	@ApiOperation(value="Retornar uma transação")
+	public Transacao buscarTransaco(@PathVariable(value="id") long id) throws JsonParseException, JsonMappingException, IOException, CredentialNotFoundException {
+		Transacao compra = transacaoRepository.findById(id);
+		if (compra == null) {
+			throw new CredentialNotFoundException("Cartão não cadastrado");
+		}
+		return compra;
+	}
+
+	@PostMapping("/transacao")
+	@ApiOperation(value="Autorização de Compra")
+	public Transacao transacaoCartao(@RequestBody  Transacao transacao ){
+
+		Cartao buscaCartao = cartaoRepository.findByNumero(transacao.getNumeroCartao());
+
+		if(!cartaoRepository.existsByNumero(transacao.getNumeroCartao())) {
+			transacao.setStatus("COD 99 - Este cartão não existe");
+			return transacao;
+		} else {
+			System.out.println(buscaCartao.getNumero());
+			if(TransacaoUtil.autorizarTransacao(transacao, buscaCartao)!=null) {
+				cartaoRepository.save(buscaCartao);
+				transacaoRepository.save(transacao);
+				return transacao;
+			} else {
+				return transacao;
+			}
+		}
 	}
 
 }
