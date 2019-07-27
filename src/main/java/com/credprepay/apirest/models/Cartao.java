@@ -23,7 +23,6 @@ public class Cartao implements Serializable{
 	private String numero;
 	private String validade;
 	private String senha;
-	@NotBlank
 	private double saldo;
 
 	public Cartao() {

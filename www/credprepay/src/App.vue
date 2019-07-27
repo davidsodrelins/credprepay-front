@@ -35,14 +35,18 @@
         <input type="text" class="input" id="titularCartao" placeholder="NOME DO TITULAR" readonly="readonly" v-model="cartao.titular" >
     </div>  
 </div>
+
+
+
 <div class="senha">
-      <input id="senha" v-show="cartao.senha" type="text" readonly="readonly" v-model=" 'SENHA: ' + cartao.senha">
+      <input id="senha" v-show="cartao.senha" type="text" readonly="readonly" v-model="senha">
 </div>
-<div id="mensagem" class="informacao">
-      <li v-for="(erros, index) of erros" :key="index">
-          campo <b>{{erros.fiels}}</b> - {{erros.defaultMessage}}
-      </li>
-  </div>
+
+
+
+
+  
+  <div id="mensagem" class="informacao"> </div>
 
   </div>
 
@@ -65,7 +69,7 @@ export default {
       },
       cartoes:[],
       cartao: {},
-      erros:[]
+      senha: ''
     }
   },
 
@@ -80,7 +84,8 @@ export default {
       Cartao.gerarCartao(this.solicitacao).then(resposta=> {
 
         this.solicitacao = {}
-        this.cartao = resposta.data       
+        this.cartao = resposta.data
+        this.senha = 'SENHA: '+this.cartao.senha     
        })
     }
   }
