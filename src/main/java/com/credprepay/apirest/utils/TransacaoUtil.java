@@ -26,7 +26,7 @@ public class TransacaoUtil {
 		if (cvvValido && dataValida && saldoSuficiente && senhaValida) {
 			transacao.setAutorizado(true);
 			cartao.atualizarSaldo(transacao.getValorCompra());
-			transacao.setStatus("COD 00 - Transação realizada com sucesso seu novo saldo é: %.2f" + cartao.getSaldo());
+			transacao.setStatus("COD 00 - Transação realizada com sucesso seu novo saldo é: + String.format("%.2f", cartao.getSaldo()));
 		}else{
 			if(!cvvValido) {
 				transacao.setStatus("COD 01 - Código CVV inválido.");
