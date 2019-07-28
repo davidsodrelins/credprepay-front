@@ -84,7 +84,7 @@ export default {
         this.cartao.numero = this.maskCC(this.cartao.numero)  
         this.retornoMessage = `Parabéns ${this.cartao.titular.split(' ')[0]}, 
         seu cartão de crédito pré-pago foi gerado! 
-         O saldo disponível para compras é de R$ ${this.cartao.saldo} e senha é: ${this.cartao.senha}.`
+         O saldo disponível para compras é de R$ ${this.cartao.saldo}. Sua senha é: ${this.cartao.senha}.`
        })
     }
   }

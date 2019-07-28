@@ -12,6 +12,15 @@ import springfox.documentation.spring.web.plugins.Docket;
 import static springfox.documentation.builders.PathSelectors.regex;
 import java.util.ArrayList;
 
+
+/*
+ * Eta classe serve apenas para gerar uma página HTML e manipular a API. Semelhante ao POSTMAN 
+ * só que mais intuitiva e menos completa.
+ * 
+ */
+
+
+
 @Configuration
 @EnableSwagger2
 public class SwaggerConfig {

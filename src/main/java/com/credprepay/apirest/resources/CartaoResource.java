@@ -1,5 +1,14 @@
 package com.credprepay.apirest.resources;
 
+/*
+ * Nesta classe está todas as rotas da API. 
+ * 
+ * Consultas e Emissao de Cartões e Transações de Compra;
+ */
+
+
+
+
 import java.io.IOException;
 import java.util.List;
 
@@ -42,13 +51,14 @@ public class CartaoResource {
 	@Autowired
 	TransacaoServices transacaoRepository;
 
-
+	//Retorna uma lista de cartoes cadastrados
 	@GetMapping("/cartoes")
 	@ApiOperation(value="Retornar a lista de cartões")
 	public List<Cartao> listaCartoes(){
 		return cartaoRepository.findAll();
 	}
 
+	//Retrona um determinado cartão a partir do id
 	@GetMapping("/cartao/{id}")
 	@ApiOperation(value="Retornar um cartão")
 	public Cartao buscar(@PathVariable(value="id") long id) throws JsonParseException, JsonMappingException, IOException, CredentialNotFoundException {
@@ -58,7 +68,8 @@ public class CartaoResource {
 		}
 		return cartao;
 	}
-
+	
+	//Retrona um determinado cartão a partir do numero do cartão
 	@GetMapping("/cartao/{numero}")
 	@ApiOperation(value="Retornar um cartão a partir do numero indicado")
 	public Cartao buscar(@PathVariable(value="numero") String numero) throws JsonParseException, JsonMappingException, IOException, CredentialNotFoundException {
@@ -84,19 +95,21 @@ public class CartaoResource {
 		}
 	}
 
-
+	//remove um cartão (deve ser passado o objeto a ser removido)
 	@DeleteMapping("/cartao")
 	@ApiOperation(value="Deleta um cartãos")
 	public void deletaCartao(@RequestBody Cartao cartao) {
 		cartaoRepository.delete(cartao);
 	}
-
+	
+	//edita um cartão (deve ser passado o objeto a ser editado)
 	@PutMapping("/cartao")
 	@ApiOperation(value="Atualiza um cartão")
 	public Cartao editaCartao(@RequestBody Cartao cartao) {
 		return cartaoRepository.save(cartao);
 	}
 
+	//Retorna todas as transações salvas
 	@GetMapping("/transacoes")
 	@ApiOperation(value="Retornar a lista de autorizações")
 
@@ -104,6 +117,7 @@ public class CartaoResource {
 		return transacaoRepository.findAll();
 	}
 
+	//busca autorização a partir de um id
 	@GetMapping("/transacao/{id}")
 	@ApiOperation(value="Retornar uma transação")
 	public Transacao buscarTransaco(@PathVariable(value="id") long id) throws JsonParseException, JsonMappingException, IOException, CredentialNotFoundException {
@@ -114,17 +128,18 @@ public class CartaoResource {
 		return compra;
 	}
 
+	//Autoriza ou não uma transação de compra
 	@PostMapping("/transacao")
 	@ApiOperation(value="Autorização de Compra")
 	public Transacao transacaoCartao(@RequestBody  Transacao transacao ){
 
 		Cartao buscaCartao = cartaoRepository.findByNumero(transacao.getNumeroCartao());
-
+		
+		//caso o cartão não exista, não faz sentido ir fazer as outras validações.
 		if(!cartaoRepository.existsByNumero(transacao.getNumeroCartao())) {
 			transacao.setStatus("COD 99 - Este cartão não existe");
 			return transacao;
 		} else {
-			System.out.println(buscaCartao.getNumero());
 			if(TransacaoUtil.autorizarTransacao(transacao, buscaCartao)!=null) {
 				cartaoRepository.save(buscaCartao);
 				transacaoRepository.save(transacao);

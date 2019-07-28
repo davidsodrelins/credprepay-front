@@ -4,6 +4,9 @@ import com.credprepay.apirest.models.Cartao;
 import com.credprepay.apirest.models.Transacao;
 
 public class TransacaoUtil {
+	
+	
+	//Checagem do saldo do cartão
 	public static boolean SaldoSuficiente(Transacao transacao, Cartao cartao) {
 		if ((cartao.getSaldo()) >= (transacao.getValorCompra())) {
 			return true;
@@ -11,6 +14,8 @@ public class TransacaoUtil {
 			return false;
 		}
 	}
+	
+	//Gravação da transação com sucesso ou com os erros possíveis
 	public static Transacao autorizarTransacao (Transacao transacao, Cartao cartao){
 
 		boolean cvvValido = CartaoUtil.ValidaCCV(transacao);

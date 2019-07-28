@@ -1,28 +1,26 @@
 <template>
 <div id="app">
-     <div class="formNovoCartao">
-      <form @submit.prevent="gerar" >
-        <input type="text" placeholder="Nome Completo" id="nome" v-model="solicitacao.titular">
-        <input type="number" step="0.010" placeholder="Informe o saldo" id="saldoInicial" v-model="solicitacao.saldo">
+     <div class="formNovaCompra">
+      <form @submit.prevent="comprar" >
+        <input type="text" placeholder="Nome do Estabelecimento" id="nome_estabelecimento" v-model="pagamento.estabelecimento">
+        <input type="number" step="0.010" placeholder="Valor da compra" id="valor_compra" v-model="pagamento.valorCompra">
         <input type="submit" class="btn2" id="btnSolicita" value="Emitir Cartão">
       </form>
     </div>
-
-  
 
 <div class="cartaoForm"> 
         <div class="logo">
           <img src="./assets/credprepaylogo.png" height="50px" width="100%" alt="CredPrePay">
         </div>
         <div class="numCartao" id="container-cartao">
-            <input type="text" class="input" id="numeroCartao"  placeholder="0000 0000 0000 0000" readonly="readonly" v-model="cartao.numero">
+            <input type="text" class="input" id="numeroCartao"  placeholder="0000 0000 0000 0000"  v-model="pagamento.cartaoNumero">
           </div>
     <div class="cartaoInfo">
       <div class="validade">
-          <input id="mesValidadeCartao" type="text" class="validadeInput" placeholder="MM/YY" readonly="readonly" v-model="cartao.validade">
+          <input id="mesValidadeCartao" type="text" class="validadeInput" placeholder="MM/YY"  v-model="pagamento.cartaoValidade">
         </div>
       <div class="cvv">
-        <input id="cvvCartao" type="text" class="cvvInput" placeholder="000" readonly="readonly" v-model="cartao.cvv">  
+        <input id="cvvCartao" type="text" class="cvvInput" placeholder="000"  v-model="pagamento.cartaoCVV">  
         <div class="cvvLogo">?
           <div class="logo">
             <img src="./assets/cvv.png" height="80px" width="80px" alt="CVV">
@@ -32,11 +30,9 @@
     </div>
     
     <div class="titular">
-        <input type="text" class="input" id="titularCartao" placeholder="NOME DO TITULAR" readonly="readonly" v-model="cartao.titular" >
+        <input type="text" class="input" id="titularCartao" placeholder="NOME DO TITULAR" >
     </div>  
 </div>
-
-
 
 <div class="informacao" v-show="retornoMessage">{{retornoMessage}}</div>
 
@@ -46,45 +42,33 @@
 
 <script>
 
-import Cartao from './services/cartoes'
+import Transacao from './services/cartoes'
 
 export default {
 
 
   data(){
     return{
-      solicitacao: {
-        titular: '',
-        saldo: ''
+      pagamento: {
+        cartaoNumero: '',
+        cartaoCVV: '',
+        cartaoValidade: '',
+        valorCompra: 0,
+        estabelecimento: '',
+        cartaoSenha :''
       },
-      cartoes:[],
-      cartao: {},
+      compra: {},
       retornoMessage: ''
     }
   },
 
-  mounted() {
-    Cartao.listarCartoes().then(resposta => {
-      this.cartoes = resposta.data
-    })
-  },
-
-
   methods:{
-      maskCC(v){
-          v = v.replace(/\D/g,""); // Permite apenas dígitos
-          v = v.replace(/(\d{4})/g, "$1   "); // Coloca um ponto a cada 4 caracteres
-          v = v.replace(/\.$/, ""); // Remove o ponto se estiver sobrando
-          return v;
-      },
-    gerar(){
-      Cartao.gerarCartao(this.solicitacao).then(resposta=> {
-        this.solicitacao = {}
-        this.cartao = resposta.data
-        this.cartao.numero = this.maskCC(this.cartao.numero)  
-        this.retornoMessage = `Parabéns ${this.cartao.titular.split(' ')[0]}, 
-        seu cartão de crédito pré-pago foi gerado! 
-         O saldo disponível para compras é de R$ ${this.cartao.saldo} e senha é: ${this.cartao.senha}.`
+      
+    comprar(){
+      Transacao.realizarCompra(this.pagamento).then(resposta=> {
+        this.compra = resposta.data
+        this.retornoMessage = `${this.compra.status.split('#')}, 
+        O saldo disponível para compras é de R$ ${this.compra.saldo}.`
        })
     }
   }
@@ -93,7 +77,7 @@ export default {
 }
 </script>
 
-<style>
+<style scoped>
 #app {
   font-family: 'Avenir', Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;

@@ -1,6 +1,9 @@
 package com.exceptions;
 
-
+/*
+ * Classe criada para pegar todas as excessões que ocorressem e armazenar no banco de dados.
+ * Essa funcionalidade não foi implementada.
+ */
 
 public class CredPrePayException extends RuntimeException {
 	

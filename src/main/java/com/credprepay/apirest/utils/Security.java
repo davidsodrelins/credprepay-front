@@ -4,6 +4,10 @@ import java.io.UnsupportedEncodingException;
 import java.security.GeneralSecurityException;
 import java.security.MessageDigest;
 
+
+/*
+ * Classe criada para gerar o hash SHA-256 da senha do cartão de crédito
+ */
 public abstract class Security {
 
 	public static String crypto(String senha) throws GeneralSecurityException, UnsupportedEncodingException {
@@ -25,9 +29,7 @@ public abstract class Security {
 
 	}
 
-	public static boolean validaToken(String senha, String hash) throws UnsupportedEncodingException, GeneralSecurityException {
-		return crypto(senha).equals(hash)?true:false;
-	}
+	
 		
 	
 	

@@ -7,7 +7,15 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 import javax.validation.constraints.NotBlank;
 
+/*
+A classe Cartao é responsável por mapear os elemnetos que irão ser cadastrados no banco de 
+dados..
+ */
 
+
+/*
+Anotações para criação da tabela no banco de dados automaticamente.
+ */
 @Entity
 @Table(name="cartao")
 

@@ -5,9 +5,16 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import javax.validation.constraints.NotBlank;
 
 @Entity
 @Table(name="transacao")
+
+
+/*
+A classe Transacao tem por objetivo criar um modelo que será avaliado quando o usuário
+submeter uma nova compra, nela estão os dados enviados pelo usuário no momento da solicitação
+da compra. Essas transações são gravas no banco de dados. */
 public class Transacao {
 	
 	@Id
@@ -15,22 +22,22 @@ public class Transacao {
 
 	private long id;
 	
-	//@NotBlank(message="{estabelecimento.not.blank}")
+	@NotBlank(message="{estabelecimento.not.blank}")
 	private String estabelecimento;
 	
-	//@NotBlank(message="{valor.compra.not.blank}")
+	@NotBlank(message="{valor.compra.not.blank}")
 	private double valorCompra;
 	
-	//@NotBlank(message="{dados.do.cartao.not.blank}")
+	@NotBlank(message="{cvv.do.cartao.not.blank}")
 	private String cvv;
 	
-	//@NotBlank(message="{dados.do.cartao.not.blank}")
+	@NotBlank(message="{validade.do.cartao.not.blank}")
 	private String validade;
 	
-	//@NotBlank(message="{dados.do.cartao.not.blank}")
+	@NotBlank(message="{numero.do.cartao.not.blank}")
 	private String numeroCartao;
 	
-	//@NotBlank(message="{dados.do.cartao.not.blank}")
+	@NotBlank(message="{senha.do.cartao.not.blank}")
 	private String senha;
 	
 	private boolean autorizado;
