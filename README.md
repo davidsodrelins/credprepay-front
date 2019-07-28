@@ -1,10 +1,13 @@
 Api para geração de cartão crédito, validação de dados dos cartões gerados e transação de compras. 
 
+repositório do frontend vue:https://github.com/davidweezing/credprepay-vuejs
+repositório do backend Java Sprint boot: https://github.com/davidweezing/credprepay-front (era pra ser back não front, nem prestei atenção... ^^ )
+
 Pode testar a aplicação! 
 Link aplicação: https://credprepay-vuejs.herokuapp.com/
 link API: https://credprepay.herokuapp.com/
 
-A api tem o swagger-ui para ver e testar as rotas:
+A api tem o swagger-ui para ver e testar as rotas: 
 link: https://credprepay.herokuapp.com/swagger-ui.html
 
 
