@@ -22,22 +22,22 @@ public class Transacao {
 
 	private long id;
 	
-	@NotBlank(message="{estabelecimento.not.blank}")
+	//@NotBlank(message="{estabelecimento.not.blank}")
 	private String estabelecimento;
 	
-	@NotBlank(message="{valor.compra.not.blank}")
+	//@NotBlank(message="{valor.compra.not.blank}")
 	private double valorCompra;
 	
-	@NotBlank(message="{cvv.do.cartao.not.blank}")
+	//@NotBlank(message="{cvv.do.cartao.not.blank}")
 	private String cvv;
 	
-	@NotBlank(message="{validade.do.cartao.not.blank}")
+	//@NotBlank(message="{validade.do.cartao.not.blank}")
 	private String validade;
 	
-	@NotBlank(message="{numero.do.cartao.not.blank}")
+	//@NotBlank(message="{numero.do.cartao.not.blank}")
 	private String numeroCartao;
 	
-	@NotBlank(message="{senha.do.cartao.not.blank}")
+	//@NotBlank(message="{senha.do.cartao.not.blank}")
 	private String senha;
 	
 	private boolean autorizado;
